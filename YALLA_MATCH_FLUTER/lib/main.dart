@@ -30,7 +30,7 @@ class YallahMatchApp extends StatelessWidget {
             GlobalCupertinoLocalizations.delegate,
           ],
           theme: ThemeData.dark().copyWith(
-            scaffoldBackgroundColor: const Color(0xFF050505),
+            scaffoldBackgroundColor: Colors.black,
           ),
           home: const LandingPage(),
         );

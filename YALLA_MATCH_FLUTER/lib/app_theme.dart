@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 /// Liquid Glass styling with Turf Grass Green (لون النجيلة)
 /// Matched exactly to the visual mockups
 class AppTheme {
-  // Backgrounds
-  static const Color bg = Color(0xFF050505);
-  static const Color darkCard = Color(0xFF0F1210);
+  // Backgrounds - Pure Solid Black
+  static const Color bg = Colors.black;
+  static const Color darkCard = Color(0xFF0C0E0D);
 
   // Turf Grass Green - لون النجيلة الرياضية الحيوية
   static const Color turfGreen = Color(0xFF22C55E);
@@ -22,20 +22,10 @@ class AppTheme {
   static Color glassBorder = Colors.white.withValues(alpha: 0.13);
   static Color glassBorderGlow = const Color(0xFF22C55E).withValues(alpha: 0.85);
 
-  /// Atmospheric background with subtle deep turf green ambient glows
+  /// Pure Black background
   static BoxDecoration ambientBackgroundDecoration() {
     return const BoxDecoration(
-      color: bg,
-      gradient: RadialGradient(
-        center: Alignment(0.65, -0.65),
-        radius: 1.35,
-        colors: [
-          Color(0x2222C55E), // Subtle dark emerald aura
-          Color(0x0822C55E),
-          Color(0xFF050505),
-        ],
-        stops: [0.0, 0.45, 1.0],
-      ),
+      color: Colors.black,
     );
   }
 
