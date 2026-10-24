@@ -133,10 +133,12 @@ class _PaymentTransferPageState extends State<PaymentTransferPage> {
       backgroundColor: transferBg,
       appBar: AppBar(
         backgroundColor: transferBg,
+        elevation: 0,
         title: const Text('Payment Confirmation', style: TextStyle(color: Colors.white)),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: SingleChildScrollView(
+      body: AmbientBackground(
+        child: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -251,7 +253,8 @@ class _PaymentTransferPageState extends State<PaymentTransferPage> {
           ],
         ),
       ),
-    );
+    ),
+  );
   }
 
   Widget _section({required String title, required List<Widget> children}) {

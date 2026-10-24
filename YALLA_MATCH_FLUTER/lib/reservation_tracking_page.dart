@@ -170,50 +170,63 @@ class _ReservationTrackingPageState extends State<ReservationTrackingPage> {
       backgroundColor: trackingBg,
       appBar: AppBar(
         backgroundColor: trackingBg,
+        elevation: 0,
         title: Text(isAr ? 'تتبع الحجز' : 'Track Reservation', style: const TextStyle(color: Colors.white)),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              TextField(
-                controller: controller,
-                style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  hintText: isAr ? 'رمز تتبع الحجز' : 'Reservation tracking code',
-                  hintStyle: const TextStyle(color: Colors.white54),
-                  filled: true,
-                  fillColor: trackingCard,
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+      body: AmbientBackground(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  decoration: AppTheme.liquidGlassDecoration(borderRadius: 14),
+                  child: TextField(
+                    controller: controller,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      hintText: isAr ? 'رمز تتبع الحجز' : 'Reservation tracking code',
+                      hintStyle: const TextStyle(color: Colors.white54),
+                      prefixIcon: const Icon(Icons.qr_code, color: trackingGreen),
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    ),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 12),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: isLoading ? null : track,
-                  style: ElevatedButton.styleFrom(backgroundColor: trackingGreen, foregroundColor: Colors.black),
-                  child: isLoading ? const CircularProgressIndicator(color: Colors.black) : Text(isAr ? 'تتبع' : 'Track'),
-                ),
-              ),
-              if (message != null)
-                Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Text(message!, style: const TextStyle(color: Colors.redAccent)),
-                ),
-              if (refundMessage != null)
-                Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Text(refundMessage!, style: const TextStyle(color: Colors.greenAccent)),
-                ),
-              if (reservation != null) ...[
-                _resultCard(),
                 const SizedBox(height: 14),
-                _buildRefundSection(reservation!),
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: ElevatedButton(
+                    onPressed: isLoading ? null : track,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: trackingGreen,
+                      foregroundColor: Colors.black,
+                      elevation: 3,
+                      shadowColor: trackingGreen.withValues(alpha: 0.4),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                    child: isLoading ? const CircularProgressIndicator(color: Colors.black) : Text(isAr ? 'تتبع' : 'Track', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                  ),
+                ),
+                if (message != null)
+                  Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Text(message!, style: const TextStyle(color: Colors.redAccent)),
+                  ),
+                if (refundMessage != null)
+                  Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Text(refundMessage!, style: const TextStyle(color: Colors.greenAccent)),
+                  ),
+                if (reservation != null) ...[
+                  _resultCard(),
+                  const SizedBox(height: 14),
+                  _buildRefundSection(reservation!),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),

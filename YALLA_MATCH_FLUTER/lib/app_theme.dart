@@ -1,8 +1,8 @@
-﻿import 'dart:ui';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 
 /// YallaMatch Design System
-/// Liquid Glass styling with Turf Grass Green (لون النجيلة)
+/// Smoked Matte Liquid Glass styling with Turf Grass Green (لون النجيلة)
 class AppTheme {
   // Backgrounds
   static const Color bg = Color(0xFF050505);
@@ -13,12 +13,32 @@ class AppTheme {
   static const Color turfGreenDark = Color(0xFF16A34A);
   static const Color turfGreenLight = Color(0xFF4ADE80);
 
+  // Elsewedy Brand Red
+  static const Color elsewedyRed = Color(0xFFE40000);
+
   // Glass Colors
   static Color glassBg = const Color(0xFF141414).withValues(alpha: 0.72);
-  static Color glassBorder = Colors.white.withValues(alpha: 0.09);
+  static Color glassBorder = Colors.white.withValues(alpha: 0.11);
   static Color glassBorderGlow = const Color(0xFF22C55E).withValues(alpha: 0.65);
 
-  /// Standard Liquid Glass Box Decoration
+  /// Atmospheric background with subtle deep turf green ambient glows
+  static BoxDecoration ambientBackgroundDecoration() {
+    return const BoxDecoration(
+      color: bg,
+      gradient: RadialGradient(
+        center: Alignment(0.65, -0.7),
+        radius: 1.3,
+        colors: [
+          Color(0x1F22C55E), // Subtle dark emerald aura
+          Color(0x0622C55E),
+          Color(0xFF050505),
+        ],
+        stops: [0.0, 0.45, 1.0],
+      ),
+    );
+  }
+
+  /// Standard Smoked Matte Glass Box Decoration
   static BoxDecoration liquidGlassDecoration({
     double borderRadius = 20,
     bool isSelected = false,
@@ -27,32 +47,76 @@ class AppTheme {
     double borderWidth = 1.0,
   }) {
     return BoxDecoration(
-      color: fillColor ?? const Color(0xFF131313).withValues(alpha: 0.75),
+      color: fillColor,
+      gradient: fillColor != null
+          ? null
+          : (isSelected
+              ? LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    turfGreen.withValues(alpha: 0.22),
+                    const Color(0xFF0F1411).withValues(alpha: 0.88),
+                  ],
+                )
+              : const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color(0xC7181D1A),
+                    Color(0xD60C100E),
+                  ],
+                )),
       borderRadius: BorderRadius.circular(borderRadius),
       border: Border.all(
         color: borderColor ??
-            (isSelected ? turfGreen : Colors.white.withValues(alpha: 0.10)),
+            (isSelected
+                ? turfGreen.withValues(alpha: 0.85)
+                : Colors.white.withValues(alpha: 0.11)),
         width: isSelected ? 1.5 : borderWidth,
       ),
       boxShadow: [
-        if (isSelected)
+        if (isSelected) ...[
           BoxShadow(
-            color: turfGreen.withValues(alpha: 0.25),
-            blurRadius: 16,
-            spreadRadius: 1,
-          )
-        else
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.4),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: turfGreen.withValues(alpha: 0.28),
+            blurRadius: 18,
+            spreadRadius: 0,
           ),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.50),
+            blurRadius: 12,
+            offset: const Offset(0, 5),
+          ),
+        ] else ...[
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.45),
+            blurRadius: 12,
+            offset: const Offset(0, 5),
+          ),
+        ],
       ],
     );
   }
 }
 
-/// Reusable Liquid Glass Container with Frosted Blur
+/// Atmospheric Ambient Background Wrapper
+class AmbientBackground extends StatelessWidget {
+  final Widget child;
+
+  const AmbientBackground({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: AppTheme.ambientBackgroundDecoration(),
+      child: child,
+    );
+  }
+}
+
+/// Reusable Smoked Matte Liquid Glass Container with Frosted Blur
 class LiquidGlassCard extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry? padding;
@@ -72,36 +136,81 @@ class LiquidGlassCard extends StatelessWidget {
     this.isSelected = false,
     this.borderColor,
     this.fillColor,
-    this.blur = 10,
+    this.blur = 14,
   });
 
   @override
   Widget build(BuildContext context) {
-    Widget content = Container(
-      padding: padding,
-      decoration: AppTheme.liquidGlassDecoration(
-        borderRadius: borderRadius,
-        isSelected: isSelected,
-        borderColor: borderColor,
-        fillColor: fillColor,
+    Widget card = Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(borderRadius),
+        boxShadow: [
+          if (isSelected) ...[
+            BoxShadow(
+              color: AppTheme.turfGreen.withValues(alpha: 0.28),
+              blurRadius: 18,
+              spreadRadius: 0,
+            ),
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.55),
+              blurRadius: 14,
+              offset: const Offset(0, 6),
+            ),
+          ] else ...[
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.45),
+              blurRadius: 12,
+              offset: const Offset(0, 5),
+            ),
+          ],
+        ],
       ),
-      child: child,
-    );
-
-    if (blur > 0) {
-      content = ClipRRect(
+      child: ClipRRect(
         borderRadius: BorderRadius.circular(borderRadius),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
-          child: content,
+          child: Container(
+            padding: padding,
+            decoration: BoxDecoration(
+              color: fillColor,
+              gradient: fillColor != null
+                  ? null
+                  : (isSelected
+                      ? LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            AppTheme.turfGreen.withValues(alpha: 0.22),
+                            const Color(0xFF0F1411).withValues(alpha: 0.88),
+                          ],
+                        )
+                      : const LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Color(0xC7181D1A),
+                            Color(0xD60C100E),
+                          ],
+                        )),
+              borderRadius: BorderRadius.circular(borderRadius),
+              border: Border.all(
+                color: borderColor ??
+                    (isSelected
+                        ? AppTheme.turfGreen.withValues(alpha: 0.85)
+                        : Colors.white.withValues(alpha: 0.11)),
+                width: isSelected ? 1.5 : 1.0,
+              ),
+            ),
+            child: child,
+          ),
         ),
-      );
-    }
+      ),
+    );
 
     if (margin != null) {
-      content = Padding(padding: margin!, child: content);
+      card = Padding(padding: margin!, child: card);
     }
 
-    return content;
+    return card;
   }
 }

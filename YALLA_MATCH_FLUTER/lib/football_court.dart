@@ -81,9 +81,15 @@ class _FootballCourtPageState extends State<FootballCourtPage> {
   Widget build(BuildContext context) {
     final isAr = AppLanguageManager.isArabic;
     return Scaffold(
-      appBar: AppBar(title: Text(isAr ? widget.sport.arabicLabel : "${widget.sport.label} Court")),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
+      backgroundColor: AppTheme.bg,
+      appBar: AppBar(
+        backgroundColor: AppTheme.bg,
+        elevation: 0,
+        title: Text(isAr ? widget.sport.arabicLabel : "${widget.sport.label} Court"),
+      ),
+      body: AmbientBackground(
+        child: isLoading
+            ? const Center(child: CircularProgressIndicator(color: AppTheme.turfGreen))
           : errorMessage != null
               ? Center(
                   child: Padding(
@@ -245,6 +251,7 @@ class _FootballCourtPageState extends State<FootballCourtPage> {
                 ),
               ],
             ),
+      ),
     );
   }
 }

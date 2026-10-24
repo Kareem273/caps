@@ -41,8 +41,9 @@ class BookingConfirmedPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xFF050505),
-      body: SafeArea(
-        child: Center(
+      body: AmbientBackground(
+        child: SafeArea(
+          child: Center(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(24),
             child: Column(
@@ -219,6 +220,7 @@ class BookingConfirmedPage extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }

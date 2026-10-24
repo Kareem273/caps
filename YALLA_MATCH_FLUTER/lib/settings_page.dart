@@ -101,10 +101,11 @@ class _SettingsPageState extends State<SettingsPage> {
         title: Text(isAr ? 'الإعدادات' : 'Settings', style: const TextStyle(color: Colors.white)),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          LiquidGlassCard(
+      body: AmbientBackground(
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            LiquidGlassCard(
             borderRadius: 18,
             padding: EdgeInsets.zero,
             child: Column(
@@ -154,7 +155,8 @@ class _SettingsPageState extends State<SettingsPage> {
             onPressed: _logout,
             child: Text(isAr ? 'تسجيل الخروج' : 'Log Out', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
           ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -171,15 +173,21 @@ class PolicyPage extends StatelessWidget {
       backgroundColor: _bgColor,
       appBar: AppBar(
         backgroundColor: _bgColor,
+        elevation: 0,
         title: Text(title, style: const TextStyle(color: Colors.white)),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Container(
+      body: AmbientBackground(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(color: _cardBg, borderRadius: BorderRadius.circular(12)),
-          child: Text(content, style: const TextStyle(color: Colors.white70)),
+          child: LiquidGlassCard(
+            borderRadius: 16,
+            padding: const EdgeInsets.all(18),
+            child: Text(
+              content,
+              style: const TextStyle(color: Colors.white70, fontSize: 14, height: 1.5),
+            ),
+          ),
         ),
       ),
     );

@@ -149,12 +149,14 @@ class _BookingPageState extends State<BookingPage> {
       backgroundColor: bg,
       appBar: AppBar(
         backgroundColor: bg,
+        elevation: 0,
         title: Text((widget.court["Name"] ?? widget.court["name"] ?? "Booking").toString(), style: const TextStyle(color: Colors.white)),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator(color: green))
-          : Column(
+      body: AmbientBackground(
+        child: isLoading
+            ? const Center(child: CircularProgressIndicator(color: green))
+            : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
@@ -226,7 +228,7 @@ class _BookingPageState extends State<BookingPage> {
                       const SizedBox(width: 16),
                       _legend(AppTheme.turfGreen.withValues(alpha: 0.8), "Available"),
                       const SizedBox(width: 16),
-                      _legend(Colors.blue.shade600, "Selected"),
+                      _legend(AppTheme.turfGreen, "Selected"),
                     ],
                   ),
                 ),
@@ -248,16 +250,16 @@ class _BookingPageState extends State<BookingPage> {
                       Color cellBorder;
                       Color textColor;
                       if (bookedHour) {
-                        cellBg = Colors.red.shade900.withValues(alpha: 0.25);
+                        cellBg = Colors.red.shade900.withValues(alpha: 0.22);
                         cellBorder = Colors.red.shade900.withValues(alpha: 0.45);
                         textColor = Colors.white38;
                       } else if (isSelected) {
-                        cellBg = Colors.blue.shade600;
-                        cellBorder = Colors.blue.shade300;
-                        textColor = Colors.white;
+                        cellBg = AppTheme.turfGreen;
+                        cellBorder = AppTheme.turfGreenLight;
+                        textColor = Colors.black;
                       } else {
-                        cellBg = AppTheme.turfGreen.withValues(alpha: 0.16);
-                        cellBorder = AppTheme.turfGreen.withValues(alpha: 0.38);
+                        cellBg = AppTheme.turfGreen.withValues(alpha: 0.12);
+                        cellBorder = AppTheme.turfGreen.withValues(alpha: 0.35);
                         textColor = AppTheme.turfGreen;
                       }
 
@@ -270,7 +272,7 @@ class _BookingPageState extends State<BookingPage> {
                             border: Border.all(color: cellBorder, width: isSelected ? 1.5 : 1.0),
                             boxShadow: isSelected
                                 ? [
-                                    BoxShadow(color: Colors.blue.withValues(alpha: 0.35), blurRadius: 10),
+                                    BoxShadow(color: AppTheme.turfGreen.withValues(alpha: 0.40), blurRadius: 10),
                                   ]
                                 : null,
                           ),
@@ -317,6 +319,7 @@ class _BookingPageState extends State<BookingPage> {
                 ),
               ],
             ),
+      ),
     );
   }
 
