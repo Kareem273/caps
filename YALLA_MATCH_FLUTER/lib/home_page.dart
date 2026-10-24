@@ -41,26 +41,37 @@ class _HomePageState extends State<HomePage> {
                         ClipOval(
                           child: Image.asset(
                             'assets/images/logo.png',
-                            width: 32,
-                            height: 32,
+                            width: 34,
+                            height: 34,
                             fit: BoxFit.cover,
                           ),
                         ),
-                        const SizedBox(width: 10),
+                        const SizedBox(width: 12),
                         RichText(
                           text: const TextSpan(
-                            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+                            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: Colors.white, letterSpacing: 0.5),
                             children: [
                               TextSpan(text: 'YALLAH '),
-                              TextSpan(text: 'MATCH', style: TextStyle(color: AppTheme.turfGreen)),
+                              TextSpan(
+                                text: 'MATCH',
+                                style: TextStyle(
+                                  color: AppTheme.turfGreen,
+                                  shadows: [
+                                    Shadow(color: Color(0x9922C55E), blurRadius: 18),
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
                         ),
                       ],
                     ),
-                    IconButton(
-                      onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SettingsPage())),
-                      icon: const Icon(Icons.settings_outlined, color: Colors.white),
+                    Container(
+                      decoration: AppTheme.liquidGlassDecoration(borderRadius: 14),
+                      child: IconButton(
+                        onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SettingsPage())),
+                        icon: const Icon(Icons.settings_outlined, color: Colors.white, size: 22),
+                      ),
                     ),
                   ],
                 ),
@@ -69,21 +80,21 @@ class _HomePageState extends State<HomePage> {
                   onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ReservationTrackingPage())),
                   child: const BookingTracker(),
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 32),
                 Text(
-                  isAr ? 'ملاعب المدرسة' : 'School Courts',
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey),
+                  isAr ? 'ملاعب المدرسة' : 'Choose a sport',
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white70),
                 ),
-                const SizedBox(height: 15),
+                const SizedBox(height: 16),
                 GridView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: CourtSport.values.length,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    mainAxisSpacing: 12,
-                    crossAxisSpacing: 12,
-                    childAspectRatio: 1.15,
+                    mainAxisSpacing: 14,
+                    crossAxisSpacing: 14,
+                    childAspectRatio: 1.08,
                   ),
                   itemBuilder: (context, index) {
                     final sport = CourtSport.values[index];
@@ -114,42 +125,48 @@ class BookingTracker extends StatelessWidget {
   Widget build(BuildContext context) {
     final isAr = AppLanguageManager.isArabic;
     return LiquidGlassCard(
-      borderRadius: 20,
-      padding: const EdgeInsets.all(20),
+      borderRadius: 24,
+      padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                isAr ? 'تتبع حجزي' : 'FOLLOW MY BOOKING',
-                style: const TextStyle(color: Color(0xFF888888), fontSize: 11, letterSpacing: 1, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                isAr ? 'تتبع باستخدام كود الحجز' : 'Track with reservation code',
-                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.white),
-              ),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  isAr ? 'تتبع حجزي' : 'FOLLOW MY BOOKING',
+                  style: const TextStyle(
+                    color: Color(0xFF8E9590),
+                    fontSize: 11,
+                    letterSpacing: 1.2,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  isAr ? 'تتبع باستخدام كود الحجز' : 'Track with reservation code',
+                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: Colors.white),
+                ),
+              ],
+            ),
           ),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
-              color: AppTheme.turfGreen.withValues(alpha: 0.15),
+              color: const Color(0xFF132219),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppTheme.turfGreen.withValues(alpha: 0.35), width: 1),
+              border: Border.all(color: AppTheme.turfGreen.withValues(alpha: 0.45)),
               boxShadow: [
                 BoxShadow(
-                  color: AppTheme.turfGreen.withValues(alpha: 0.20),
+                  color: AppTheme.turfGreen.withValues(alpha: 0.25),
                   blurRadius: 10,
-                  spreadRadius: 0,
                 ),
               ],
             ),
             child: Text(
               isAr ? 'تتبع' : 'Track',
-              style: const TextStyle(color: AppTheme.turfGreen, fontSize: 12, fontWeight: FontWeight.bold),
+              style: const TextStyle(color: AppTheme.turfGreen, fontSize: 13, fontWeight: FontWeight.bold),
             ),
           ),
         ],
@@ -177,7 +194,7 @@ class _CategoryCardState extends State<CategoryCard> {
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 260),
         curve: Curves.easeOut,
         transform: _isHovered ? Matrix4.translationValues(0, -6, 0) : Matrix4.identity(),
         child: LiquidGlassCard(
@@ -187,38 +204,55 @@ class _CategoryCardState extends State<CategoryCard> {
           child: Stack(
             clipBehavior: Clip.antiAlias,
             children: [
+              // Faint watermark icon in bottom-right matching mockup
               Positioned(
                 bottom: -15,
                 right: -15,
                 child: Opacity(
-                  opacity: _isHovered ? 0.20 : 0.07,
+                  opacity: _isHovered ? 0.08 : 0.045,
                   child: Transform.rotate(
-                    angle: _isHovered ? 0.35 : 0,
-                    child: Icon(widget.icon, size: 90, color: Colors.white),
+                    angle: _isHovered ? 0.30 : 0.15,
+                    child: Icon(widget.icon, size: 105, color: Colors.white),
                   ),
                 ),
               ),
+              // Centered glowing neon icon + title
               Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                        color: AppTheme.turfGreen.withValues(alpha: _isHovered ? 0.22 : 0.12),
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppTheme.turfGreen.withValues(alpha: _isHovered ? 0.45 : 0.20),
-                            blurRadius: _isHovered ? 20 : 12,
-                            spreadRadius: 1,
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        // Radial neon glow bloom behind the icon
+                        Container(
+                          width: 52,
+                          height: 52,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppTheme.turfGreen.withValues(alpha: 0.15),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppTheme.turfGreen.withValues(alpha: _isHovered ? 0.70 : 0.50),
+                                blurRadius: _isHovered ? 34 : 26,
+                                spreadRadius: _isHovered ? 6 : 3,
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      child: Icon(widget.icon, color: AppTheme.turfGreen, size: 36),
+                        ),
+                        Icon(widget.icon, color: AppTheme.turfGreenLight, size: 44),
+                      ],
                     ),
-                    const SizedBox(height: 12),
-                    Text(widget.title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+                    const SizedBox(height: 14),
+                    Text(
+                      widget.title,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        letterSpacing: 0.3,
+                      ),
+                    ),
                   ],
                 ),
               ),

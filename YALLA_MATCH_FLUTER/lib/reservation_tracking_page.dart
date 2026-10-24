@@ -195,19 +195,24 @@ class _ReservationTrackingPageState extends State<ReservationTrackingPage> {
                   ),
                 ),
                 const SizedBox(height: 14),
-                SizedBox(
+                Container(
                   width: double.infinity,
-                  height: 48,
-                  child: ElevatedButton(
-                    onPressed: isLoading ? null : track,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: trackingGreen,
-                      foregroundColor: Colors.black,
-                      elevation: 3,
-                      shadowColor: trackingGreen.withValues(alpha: 0.4),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  height: 50,
+                  decoration: AppTheme.greenGlowButtonDecoration(borderRadius: 14),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(14),
+                      onPressed: isLoading ? null : track,
+                      child: Center(
+                        child: isLoading
+                            ? const CircularProgressIndicator(color: Colors.black, strokeWidth: 2.5)
+                            : Text(
+                                isAr ? 'تتبع' : 'Track',
+                                style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w800, fontSize: 16),
+                              ),
+                      ),
                     ),
-                    child: isLoading ? const CircularProgressIndicator(color: Colors.black) : Text(isAr ? 'تتبع' : 'Track', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
                   ),
                 ),
                 if (message != null)

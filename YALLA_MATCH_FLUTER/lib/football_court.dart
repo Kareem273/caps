@@ -221,26 +221,29 @@ class _FootballCourtPageState extends State<FootballCourtPage> {
                                     ),
                                   ],
                                   const SizedBox(height: 12),
-                                  SizedBox(
+                                  Container(
                                     width: double.infinity,
-                                    height: 46,
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: AppTheme.turfGreen,
-                                        foregroundColor: Colors.black,
-                                        elevation: 3,
-                                        shadowColor: AppTheme.turfGreen.withValues(alpha: 0.4),
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                      ),
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (_) => BookingPage(court: court, userId: widget.userId),
+                                    height: 48,
+                                    decoration: AppTheme.greenGlowButtonDecoration(borderRadius: 14),
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                        borderRadius: BorderRadius.circular(14),
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (_) => BookingPage(court: court, userId: widget.userId),
+                                            ),
+                                          );
+                                        },
+                                        child: Center(
+                                          child: Text(
+                                            isAr ? "احجز الآن" : "Book Now",
+                                            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w800, fontSize: 15),
                                           ),
-                                        );
-                                      },
-                                      child: const Text("Book Now", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ],

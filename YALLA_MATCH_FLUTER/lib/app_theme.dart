@@ -2,11 +2,12 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 /// YallaMatch Design System
-/// Smoked Matte Liquid Glass styling with Turf Grass Green (لون النجيلة)
+/// Liquid Glass styling with Turf Grass Green (لون النجيلة)
+/// Matched exactly to the visual mockups
 class AppTheme {
   // Backgrounds
   static const Color bg = Color(0xFF050505);
-  static const Color darkCard = Color(0xFF0F0F0F);
+  static const Color darkCard = Color(0xFF0F1210);
 
   // Turf Grass Green - لون النجيلة الرياضية الحيوية
   static const Color turfGreen = Color(0xFF22C55E);
@@ -17,20 +18,20 @@ class AppTheme {
   static const Color elsewedyRed = Color(0xFFE40000);
 
   // Glass Colors
-  static Color glassBg = const Color(0xFF141414).withValues(alpha: 0.72);
-  static Color glassBorder = Colors.white.withValues(alpha: 0.11);
-  static Color glassBorderGlow = const Color(0xFF22C55E).withValues(alpha: 0.65);
+  static Color glassBg = const Color(0xFF141916).withValues(alpha: 0.75);
+  static Color glassBorder = Colors.white.withValues(alpha: 0.13);
+  static Color glassBorderGlow = const Color(0xFF22C55E).withValues(alpha: 0.85);
 
   /// Atmospheric background with subtle deep turf green ambient glows
   static BoxDecoration ambientBackgroundDecoration() {
     return const BoxDecoration(
       color: bg,
       gradient: RadialGradient(
-        center: Alignment(0.65, -0.7),
-        radius: 1.3,
+        center: Alignment(0.65, -0.65),
+        radius: 1.35,
         colors: [
-          Color(0x1F22C55E), // Subtle dark emerald aura
-          Color(0x0622C55E),
+          Color(0x2222C55E), // Subtle dark emerald aura
+          Color(0x0822C55E),
           Color(0xFF050505),
         ],
         stops: [0.0, 0.45, 1.0],
@@ -38,13 +39,14 @@ class AppTheme {
     );
   }
 
-  /// Standard Smoked Matte Glass Box Decoration
+  /// Standard Liquid Glass Box Decoration matching the mockup
   static BoxDecoration liquidGlassDecoration({
     double borderRadius = 20,
     bool isSelected = false,
     Color? borderColor,
     Color? fillColor,
     double borderWidth = 1.0,
+    bool glow = false,
   }) {
     return BoxDecoration(
       color: fillColor,
@@ -55,45 +57,62 @@ class AppTheme {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    turfGreen.withValues(alpha: 0.22),
-                    const Color(0xFF0F1411).withValues(alpha: 0.88),
+                    turfGreen.withValues(alpha: 0.28),
+                    const Color(0xFF0E1511).withValues(alpha: 0.92),
                   ],
                 )
               : const LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Color(0xC7181D1A),
-                    Color(0xD60C100E),
+                    Color(0xDB202823), // Sleek subtle top-left glass highlight
+                    Color(0xEB121714), // Deep smoked body
+                    Color(0xF50B0F0D), // Dark bottom-right
                   ],
+                  stops: [0.0, 0.45, 1.0],
                 )),
       borderRadius: BorderRadius.circular(borderRadius),
       border: Border.all(
         color: borderColor ??
             (isSelected
-                ? turfGreen.withValues(alpha: 0.85)
-                : Colors.white.withValues(alpha: 0.11)),
+                ? turfGreen.withValues(alpha: 0.90)
+                : Colors.white.withValues(alpha: 0.13)),
         width: isSelected ? 1.5 : borderWidth,
       ),
       boxShadow: [
-        if (isSelected) ...[
+        if (isSelected || glow) ...[
           BoxShadow(
-            color: turfGreen.withValues(alpha: 0.28),
-            blurRadius: 18,
-            spreadRadius: 0,
+            color: turfGreen.withValues(alpha: 0.35),
+            blurRadius: 20,
+            spreadRadius: 1,
           ),
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.50),
-            blurRadius: 12,
-            offset: const Offset(0, 5),
+            color: Colors.black.withValues(alpha: 0.55),
+            blurRadius: 14,
+            offset: const Offset(0, 6),
           ),
         ] else ...[
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.45),
-            blurRadius: 12,
-            offset: const Offset(0, 5),
+            blurRadius: 14,
+            offset: const Offset(0, 6),
           ),
         ],
+      ],
+    );
+  }
+
+  /// Neon Turf Green Button Decoration matching the mockup
+  static BoxDecoration greenGlowButtonDecoration({double borderRadius = 16}) {
+    return BoxDecoration(
+      color: turfGreen,
+      borderRadius: BorderRadius.circular(borderRadius),
+      boxShadow: [
+        BoxShadow(
+          color: turfGreen.withValues(alpha: 0.55),
+          blurRadius: 22,
+          spreadRadius: 1,
+        ),
       ],
     );
   }
@@ -116,7 +135,7 @@ class AmbientBackground extends StatelessWidget {
   }
 }
 
-/// Reusable Smoked Matte Liquid Glass Container with Frosted Blur
+/// Reusable Liquid Glass Container with Frosted Blur and Outer Glow
 class LiquidGlassCard extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry? padding;
@@ -126,6 +145,7 @@ class LiquidGlassCard extends StatelessWidget {
   final Color? borderColor;
   final Color? fillColor;
   final double blur;
+  final bool glow;
 
   const LiquidGlassCard({
     super.key,
@@ -137,6 +157,7 @@ class LiquidGlassCard extends StatelessWidget {
     this.borderColor,
     this.fillColor,
     this.blur = 14,
+    this.glow = false,
   });
 
   @override
@@ -145,11 +166,11 @@ class LiquidGlassCard extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius),
         boxShadow: [
-          if (isSelected) ...[
+          if (isSelected || glow) ...[
             BoxShadow(
-              color: AppTheme.turfGreen.withValues(alpha: 0.28),
-              blurRadius: 18,
-              spreadRadius: 0,
+              color: AppTheme.turfGreen.withValues(alpha: 0.35),
+              blurRadius: 20,
+              spreadRadius: 1,
             ),
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.55),
@@ -159,8 +180,8 @@ class LiquidGlassCard extends StatelessWidget {
           ] else ...[
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.45),
-              blurRadius: 12,
-              offset: const Offset(0, 5),
+              blurRadius: 14,
+              offset: const Offset(0, 6),
             ),
           ],
         ],
@@ -180,24 +201,26 @@ class LiquidGlassCard extends StatelessWidget {
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
-                            AppTheme.turfGreen.withValues(alpha: 0.22),
-                            const Color(0xFF0F1411).withValues(alpha: 0.88),
+                            AppTheme.turfGreen.withValues(alpha: 0.28),
+                            const Color(0xFF0E1511).withValues(alpha: 0.92),
                           ],
                         )
                       : const LinearGradient(
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
-                            Color(0xC7181D1A),
-                            Color(0xD60C100E),
+                            Color(0xDB202823),
+                            Color(0xEB121714),
+                            Color(0xF50B0F0D),
                           ],
+                          stops: [0.0, 0.45, 1.0],
                         )),
               borderRadius: BorderRadius.circular(borderRadius),
               border: Border.all(
                 color: borderColor ??
                     (isSelected
-                        ? AppTheme.turfGreen.withValues(alpha: 0.85)
-                        : Colors.white.withValues(alpha: 0.11)),
+                        ? AppTheme.turfGreen.withValues(alpha: 0.90)
+                        : Colors.white.withValues(alpha: 0.13)),
                 width: isSelected ? 1.5 : 1.0,
               ),
             ),
