@@ -265,7 +265,7 @@ export function ReservationDetailsDialog({
                         type="button"
                         variant="outline"
                         size="sm"
-                        className="mt-2 text-xs bg-white text-zinc-900 border-zinc-300 hover:bg-zinc-100"
+                        className="mt-2 text-xs bg-card text-card-foreground border-border hover:bg-muted"
                         onClick={() => {
                           setLoadingImage(true);
                           setImageError(null);
@@ -355,7 +355,7 @@ export function ReservationDetailsDialog({
                     type="button"
                     variant="outline"
                     size="sm"
-                    className="h-8 text-xs bg-white text-zinc-900 border-zinc-300 hover:bg-zinc-100 font-medium"
+                    className="h-8 text-xs bg-card text-card-foreground border-border hover:bg-muted font-medium"
                     onClick={() => setIsRejecting(false)}
                     disabled={actionLoading}
                   >
@@ -392,7 +392,7 @@ export function ReservationDetailsDialog({
                       <Button
                         type="button"
                         variant="outline"
-                        className="bg-white text-rose-600 font-semibold border-rose-200 hover:bg-rose-50 hover:text-rose-700 shadow-sm"
+                        className="bg-card text-rose-500 font-semibold border-destructive/40 hover:bg-destructive/10 hover:text-rose-700 shadow-sm"
                         onClick={() => setIsRejecting(true)}
                         disabled={actionLoading}
                       >
@@ -418,7 +418,7 @@ export function ReservationDetailsDialog({
                   <Button
                     type="button"
                     variant="outline"
-                    className="bg-white text-zinc-900 font-semibold border-zinc-300 hover:bg-zinc-100 hover:text-black shadow-sm"
+                    className="bg-card text-card-foreground font-semibold border-input hover:bg-muted hover:text-black shadow-sm"
                     onClick={() => onOpenChange(false)}
                   >
                     Close
@@ -445,7 +445,7 @@ export function ReservationDetailsDialog({
               <Button
                 type="button"
                 variant="outline"
-                className="bg-white text-zinc-900 font-semibold border-zinc-300 hover:bg-zinc-100 text-xs h-8"
+                className="bg-card text-card-foreground font-semibold border-input hover:bg-muted text-xs h-8"
                 onClick={() => setIsZoomed(false)}
               >
                 Close Enlarge

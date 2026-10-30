@@ -12,6 +12,7 @@ import CheckIn from '@/pages/check-in';
 import Refunds from '@/pages/refunds';
 import Activity from '@/pages/activity';
 import { BlockedSlotsProvider } from '@/context/blocked-slots-context';
+import { ThemeProvider } from '@/context/theme-context';
 import { login } from '@/lib/yalla-api';
 
 const queryClient = new QueryClient();
@@ -107,20 +108,26 @@ function App() {
   };
 
   if (!authenticated) {
-    return <LoginPage onLogin={handleLogin} />;
+    return (
+      <ThemeProvider>
+        <LoginPage onLogin={handleLogin} />
+      </ThemeProvider>
+    );
   }
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <BlockedSlotsProvider>
-          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
-            <Router authenticated={authenticated} />
-          </WouterRouter>
-        </BlockedSlotsProvider>
-        <Toaster />
-      </TooltipProvider>
-    </QueryClientProvider>
+    <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <BlockedSlotsProvider>
+            <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
+              <Router authenticated={authenticated} />
+            </WouterRouter>
+          </BlockedSlotsProvider>
+          <Toaster />
+        </TooltipProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 }
 

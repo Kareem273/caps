@@ -232,7 +232,7 @@ export default function Dashboard() {
             <p className="text-muted-foreground mt-1">Live performance data from your Yalla Match database.</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" className="bg-white" onClick={() => downloadPdfReport(filtered)} disabled={loading}>
+            <Button variant="outline" className="bg-card text-card-foreground hover:bg-muted border-border" onClick={() => downloadPdfReport(filtered)} disabled={loading}>
               <Download className="mr-2 w-4 h-4" /> Export PDF
             </Button>
             <Button className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium shadow-sm" onClick={() => downloadExcelReport(filtered)} disabled={loading}>
@@ -243,7 +243,7 @@ export default function Dashboard() {
 
         {error && <Card className="border-destructive/30"><CardContent className="p-4 flex justify-between items-center gap-4 text-sm text-destructive"><span>{error}</span><Button size="sm" variant="outline" onClick={() => void load()}>Retry</Button></CardContent></Card>}
 
-        <Card className="bg-white shadow-sm border-border/50">
+        <Card className="bg-card shadow-sm border-border/60 text-card-foreground">
           <CardContent className="p-4 flex flex-wrap items-center gap-3">
             <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground"><Filter className="w-4 h-4" /> Filters</div>
             <div className="relative flex-1 min-w-[200px]"><Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" /><Input placeholder="Search by ID, customer, court..." className="pl-9 h-9" value={draft.query} onChange={e => setDraft(v => ({ ...v, query: e.target.value }))} /></div>
@@ -345,8 +345,8 @@ export default function Dashboard() {
               </div>
             </div>
             <DialogFooter className="gap-2 sm:justify-end">
-              <Button type="button" variant="outline" className="bg-white text-zinc-900 font-semibold border-zinc-300 hover:bg-zinc-100" onClick={() => setRefundDialogOpen(false)} disabled={refundSaving}>Cancel</Button>
-              <Button type="button" className="bg-white text-zinc-900 font-semibold border border-zinc-300 hover:bg-zinc-100 shadow-sm" onClick={handleRefundSubmit} disabled={refundSaving}>
+              <Button type="button" variant="outline" className="bg-card text-card-foreground font-semibold border-input hover:bg-muted" onClick={() => setRefundDialogOpen(false)} disabled={refundSaving}>Cancel</Button>
+              <Button type="button" className="bg-card text-card-foreground font-semibold border-input hover:bg-muted shadow-sm" onClick={handleRefundSubmit} disabled={refundSaving}>
                 {refundSaving ? 'Submitting…' : 'Submit refund request'}
               </Button>
             </DialogFooter>
@@ -370,7 +370,7 @@ export default function Dashboard() {
                   <Badge variant={pendingReviews.length > 0 ? "warning" : "secondary"}>
                     {pendingReviews.length} pending
                   </Badge>
-                  <Button size="sm" variant="outline" className="h-8 text-xs bg-white text-zinc-900 border-zinc-200" asChild>
+                  <Button size="sm" variant="outline" className="h-8 text-xs bg-card text-card-foreground border-border hover:bg-muted" asChild>
                     <a href="/reservations?receipt=only">Review in Reservations →</a>
                   </Button>
                 </div>
@@ -407,7 +407,7 @@ export default function Dashboard() {
                           <Button
                             size="sm"
                             variant="outline"
-                            className="h-8 text-xs bg-white text-zinc-900 border-zinc-300"
+                            className="h-8 text-xs bg-card text-card-foreground border-border hover:bg-muted"
                             onClick={(e) => {
                               e.stopPropagation();
                               setSelectedReservation(reservation);

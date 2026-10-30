@@ -73,7 +73,7 @@ export default function Refunds() {
             <p className="text-muted-foreground mt-1">Review pending customer refund requests, approve or reject them, and view processed refund history.</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" className="bg-white" onClick={loadData} disabled={loading}>
+            <Button variant="outline" className="bg-card text-card-foreground hover:bg-muted border-border" onClick={loadData} disabled={loading}>
               <RefreshCw className={`mr-2 w-4 h-4 ${loading ? 'animate-spin' : ''}`} /> Refresh
             </Button>
             <Button className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium shadow-sm" onClick={() => downloadRefundsReport(refunds)} disabled={loading || refunds.length === 0}>
