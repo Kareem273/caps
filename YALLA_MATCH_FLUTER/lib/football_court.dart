@@ -19,21 +19,13 @@ class FootballCourtPage extends StatefulWidget {
 
 class _FootballCourtPageState extends State<FootballCourtPage> {
   List allCourts = [];
-  List filteredCourts = [];
   bool isLoading = true;
   String? errorMessage;
-  final TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     fetchCourts();
-  }
-
-  @override
-  void dispose() {
-    searchController.dispose();
-    super.dispose();
   }
 
   Future<void> fetchCourts() async {
@@ -46,7 +38,6 @@ class _FootballCourtPageState extends State<FootballCourtPage> {
       if (!mounted) return;
       setState(() {
         allCourts = data;
-        filteredCourts = data;
         isLoading = false;
       });
     } catch (e) {
@@ -56,17 +47,6 @@ class _FootballCourtPageState extends State<FootballCourtPage> {
         isLoading = false;
       });
     }
-  }
-
-  void searchCourt(String value) {
-    setState(() {
-      filteredCourts = allCourts.where((court) {
-        final searchValue = value.toLowerCase();
-        final name = (court['Name'] ?? court['name'] ?? '').toString().toLowerCase();
-        final place = (court['place'] ?? court['Place'] ?? '').toString().toLowerCase();
-        return name.contains(searchValue) || place.contains(searchValue);
-      }).toList();
-    });
   }
 
   Future<void> openLocation(String? value) async {
@@ -111,31 +91,32 @@ class _FootballCourtPageState extends State<FootballCourtPage> {
           : Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                   child: Container(
-                    decoration: AppTheme.liquidGlassDecoration(borderRadius: 16),
-                    child: TextField(
-                      controller: searchController,
-                      onChanged: searchCourt,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                        hintText: "Search ${widget.sport.label.toLowerCase()} courts...",
-                        hintStyle: const TextStyle(color: Colors.white54, fontSize: 14),
-                        prefixIcon: const Icon(Icons.search, color: AppTheme.turfGreen),
-                        border: InputBorder.none,
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                      ),
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                    decoration: AppTheme.liquidGlassDecoration(borderRadius: 14),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.school_rounded, color: AppTheme.turfGreen, size: 20),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            isAr ? 'ملاعب المدرسة المتاحة للحجز' : 'School Courts Available for Booking',
+                            style: const TextStyle(color: Colors.white70, fontSize: 13, fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
                 Expanded(
-                  child: filteredCourts.isEmpty
-                      ? Center(child: Text("No ${widget.sport.label.toLowerCase()} courts found", style: const TextStyle(color: Colors.white60)))
+                  child: allCourts.isEmpty
+                      ? Center(child: Text(isAr ? "لا توجد ملاعب متاحة حالياً" : "No courts available", style: const TextStyle(color: Colors.white60)))
                       : ListView.builder(
                           padding: const EdgeInsets.only(bottom: 20),
-                          itemCount: filteredCourts.length,
+                          itemCount: allCourts.length,
                           itemBuilder: (context, index) {
-                            final court = filteredCourts[index];
+                            final court = allCourts[index];
                             final locationUrl = court['locationUrl']?.toString();
                             final courtId = (court['id'] ?? court['Id'] ?? '').toString();
                             return LiquidGlassCard(
