@@ -11,10 +11,12 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { NavigationBar } from './navigation-bar';
 import { useTheme } from '@/context/theme-context';
+import { useRbac, type UserRole } from '@/context/rbac-context';
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const [pendingRequestsCount, setPendingRequestsCount] = useState<number>(0);
   const { theme, toggleTheme } = useTheme();
+  const { role, setRole, roleLabels } = useRbac();
   const today = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
   const userRole = localStorage.getItem('yalla-admin-role') || 'Admin';
 
@@ -90,17 +92,31 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               </Button>
             </Link>
 
+            {/* Granular RBAC Staff Role Switcher */}
+            <div className="flex items-center gap-2">
+              <select
+                value={role}
+                onChange={(e) => setRole(e.target.value as UserRole)}
+                className="h-8 px-2 text-xs font-semibold rounded-md border border-border bg-card text-foreground cursor-pointer shadow-xs focus:outline-none focus:ring-1 focus:ring-primary"
+                title="Switch Staff Role (Granular RBAC)"
+              >
+                <option value="SUPER_ADMIN">👑 Super Admin</option>
+                <option value="RECEPTIONIST">🎟️ Receptionist</option>
+                <option value="FINANCIAL_AUDITOR">📊 Financial Auditor</option>
+              </select>
+            </div>
+
             <div className="flex items-center gap-3 pl-2.5 border-l border-border/60">
               <div className="hidden md:flex flex-col items-end">
                 <span className="text-sm font-medium text-foreground">{localStorage.getItem('yalla-admin-email') || 'Admin'}</span>
-                <Badge variant={userRole === 'SuperAdmin' ? 'default' : 'secondary'} className="text-[10px] h-4 rounded-full px-1.5">
-                  {userRole === 'SuperAdmin' ? 'Super Admin' : 'Admin'}
+                <Badge variant={role === 'SUPER_ADMIN' ? 'default' : 'secondary'} className="text-[10px] h-4 rounded-full px-1.5 font-bold">
+                  {roleLabels[role].en}
                 </Badge>
               </div>
               <Avatar className="h-9 w-9 ring-2 ring-emerald-500/20">
                 <AvatarImage src="" />
                 <AvatarFallback className="bg-emerald-500/10 text-emerald-600 font-semibold">
-                  {userRole === 'SuperAdmin' ? 'SA' : 'AD'}
+                  {role === 'SUPER_ADMIN' ? 'SA' : role === 'RECEPTIONIST' ? 'RC' : 'FA'}
                 </AvatarFallback>
               </Avatar>
             </div>

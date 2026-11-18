@@ -11,6 +11,8 @@ using YallaMatch.Api.Data;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.AddSignalR();
+builder.Services.AddSingleton<YallaMatch.Api.Services.INotificationService, YallaMatch.Api.Services.NotificationService>();
 builder.Services.AddResponseCompression(options =>
 {
     options.EnableForHttps = true;
@@ -115,6 +117,7 @@ app.UseAuthentication();
 app.UseRateLimiter();
 app.UseAuthorization();
 app.MapControllers();
+app.MapHub<YallaMatch.Api.Hubs.ScheduleHub>("/hubs/schedule");
 
 using (var scope = app.Services.CreateScope())
 {

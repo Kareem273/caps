@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.SignalR;
 using QRCoder;
 using YallaMatch.Api.Contracts;
 using YallaMatch.Api.Data;
@@ -13,7 +14,11 @@ namespace YallaMatch.Api.Controllers;
 
 [ApiController]
 [Route("api/reservations")]
-public sealed class ReservationsController(YallaMatchDbContext db, IWebHostEnvironment env) : ControllerBase
+public sealed class ReservationsController(
+    YallaMatchDbContext db, 
+    IWebHostEnvironment env,
+    Microsoft.AspNetCore.SignalR.IHubContext<YallaMatch.Api.Hubs.ScheduleHub> hubContext,
+    YallaMatch.Api.Services.INotificationService notifications) : ControllerBase
 {
     [HttpGet]
     [Authorize(Roles = "SuperAdmin,Admin")]
@@ -65,7 +70,7 @@ public sealed class ReservationsController(YallaMatchDbContext db, IWebHostEnvir
             r.Date == request.Date &&
             r.Status != ReservationStatus.Rejected &&
             r.Status != ReservationStatus.Cancelled &&
-            r.Status != ReservationStatus.AwaitingPaymentScreenshot &&
+            (r.Status == ReservationStatus.Confirmed || (r.Status == ReservationStatus.AwaitingPaymentScreenshot && r.CreatedAtUtc >= DateTimeOffset.UtcNow.AddMinutes(-10))) &&
             request.FromHour <= r.ToHour &&
             request.ToHour >= r.FromHour);
 
@@ -99,6 +104,22 @@ public sealed class ReservationsController(YallaMatchDbContext db, IWebHostEnvir
         db.Reservations.Add(reservation);
         await db.SaveChangesAsync();
         await transaction.CommitAsync();
+
+        _ = hubContext.Clients.All.SendAsync("SlotStatusChanged", new
+        {
+            CourtId = court.Id.ToString(),
+            Date = request.Date,
+            FromHour = request.FromHour,
+            ToHour = request.ToHour,
+            Status = "Held",
+            Reason = "10-Minute Hold",
+            TimestampUtc = DateTimeOffset.UtcNow
+        });
+
+        if (!string.IsNullOrWhiteSpace(request.CustomerPhone))
+        {
+            _ = notifications.SendPaymentReminderAsync(request.CustomerPhone, reservation.TrackingCode, 10);
+        }
 
         reservation.Court = court;
         return Created($"/api/reservations/{reservation.Id}", CustomerReservationDto.From(reservation));
@@ -189,7 +210,7 @@ public sealed class ReservationsController(YallaMatchDbContext db, IWebHostEnvir
             r.Date == reservation.Date &&
             r.Status != ReservationStatus.Rejected &&
             r.Status != ReservationStatus.Cancelled &&
-            r.Status != ReservationStatus.AwaitingPaymentScreenshot &&
+            (r.Status == ReservationStatus.Confirmed || (r.Status == ReservationStatus.AwaitingPaymentScreenshot && r.CreatedAtUtc >= DateTimeOffset.UtcNow.AddMinutes(-10))) &&
             reservation.FromHour <= r.ToHour &&
             reservation.ToHour >= r.FromHour);
 

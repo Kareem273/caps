@@ -13,6 +13,7 @@ import Refunds from '@/pages/refunds';
 import Activity from '@/pages/activity';
 import { BlockedSlotsProvider } from '@/context/blocked-slots-context';
 import { ThemeProvider } from '@/context/theme-context';
+import { RbacProvider } from '@/context/rbac-context';
 import { login } from '@/lib/yalla-api';
 
 const queryClient = new QueryClient();
@@ -119,11 +120,13 @@ function App() {
     <ThemeProvider>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
-          <BlockedSlotsProvider>
-            <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
-              <Router authenticated={authenticated} />
-            </WouterRouter>
-          </BlockedSlotsProvider>
+          <RbacProvider>
+            <BlockedSlotsProvider>
+              <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
+                <Router authenticated={authenticated} />
+              </WouterRouter>
+            </BlockedSlotsProvider>
+          </RbacProvider>
           <Toaster />
         </TooltipProvider>
       </QueryClientProvider>
