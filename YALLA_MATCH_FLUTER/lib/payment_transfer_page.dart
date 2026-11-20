@@ -161,12 +161,16 @@ class _PaymentTransferPageState extends State<PaymentTransferPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
-                          'Reservation #$reservationId',
-                          style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w800),
+                        Expanded(
+                          child: Text(
+                            'Reservation #${reservationId.length > 8 ? reservationId.substring(0, 8).toUpperCase() : reservationId}',
+                            style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w800),
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
+                        const SizedBox(width: 8),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                           decoration: BoxDecoration(
