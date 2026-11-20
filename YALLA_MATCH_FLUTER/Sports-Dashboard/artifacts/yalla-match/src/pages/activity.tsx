@@ -34,22 +34,23 @@ export default function Activity() {
     })();
   }, []);
 
-  // Filter logs according to role: SuperAdmin sees all admin logs; Regular Admin sees operational activity / own logs
-  const roleFilteredLogs = userRole === 'SuperAdmin' 
-    ? logs 
-    : logs.filter(l => l.adminEmail.toLowerCase() === currentEmail.toLowerCase() || l.adminRole === 'Admin');
+  // All administrators have full access to view facility audit logs and operational events
+  const roleFilteredLogs = logs;
 
-  // Search & Category Filter
+  // Search & Category Filter with complete null safety
   const visibleLogs = roleFilteredLogs.filter(log => {
-    const matchesSearch = search === '' || 
-      log.adminEmail.toLowerCase().includes(search.toLowerCase()) ||
-      log.action.toLowerCase().includes(search.toLowerCase()) ||
-      log.details.toLowerCase().includes(search.toLowerCase());
-    const matchesCategory = categoryFilter === 'ALL' || log.category.toLowerCase() === categoryFilter.toLowerCase();
+    const email = (log.adminEmail || '').toLowerCase();
+    const action = (log.action || '').toLowerCase();
+    const details = (log.details || '').toLowerCase();
+    const cat = (log.category || 'General').toLowerCase();
+    const s = search.toLowerCase();
+
+    const matchesSearch = s === '' || email.includes(s) || action.includes(s) || details.includes(s);
+    const matchesCategory = categoryFilter === 'ALL' || cat === categoryFilter.toLowerCase();
     return matchesSearch && matchesCategory;
   });
 
-  const categories = ['ALL', ...Array.from(new Set(roleFilteredLogs.map(l => l.category).filter(Boolean)))];
+  const categories = ['ALL', ...Array.from(new Set(roleFilteredLogs.map(l => l.category || 'General').filter(Boolean)))];
 
   return (
     <AppLayout>

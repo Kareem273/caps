@@ -59,7 +59,7 @@ public sealed class ReservationsController(
         if (!IsValidSlot(request.Date, request.FromHour, request.ToHour))
             return BadRequest("Use a valid date and hours from 0 to 23.");
 
-        await using var transaction = await db.Database.BeginTransactionAsync(IsolationLevel.Serializable);
+        await using var transaction = await db.Database.BeginTransactionAsync(IsolationLevel.ReadCommitted);
         var court = await db.Courts.FirstOrDefaultAsync(c => c.Id == request.CourtId && c.IsActive);
         if (court is null) return NotFound("Court not found.");
 

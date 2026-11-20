@@ -149,6 +149,7 @@ public sealed class AdminController(YallaMatchDbContext db, IWebHostEnvironment 
     public async Task<IActionResult> RejectPayment(Guid id, RejectPaymentRequest request)
     {
         var reservation = await db.Reservations
+            .Include(r => r.Court)
             .Include(r => r.PaymentConfirmation)
             .FirstOrDefaultAsync(r => r.Id == id);
 
@@ -163,6 +164,17 @@ public sealed class AdminController(YallaMatchDbContext db, IWebHostEnvironment 
             reservation.PaymentConfirmation.ReviewedAtUtc = DateTimeOffset.UtcNow;
             reservation.PaymentConfirmation.RejectionReason = request.Reason;
         }
+
+        var (actorEmail, actorRole) = GetActorInfo();
+        db.AuditLogs.Add(new AuditLog
+        {
+            AdminEmail = actorEmail,
+            AdminRole = actorRole,
+            Action = "Ø±ÙØ¶ Ø¥ÙŠØµØ§Ù„ Ø§Ù„Ø¯ÙØ¹",
+            Details = $"ØªÙ… Ø±ÙØ¶ Ø¥ÙŠØµØ§Ù„ Ø§Ù„Ø¯ÙØ¹ Ù„Ù„Ø­Ø¬Ø² #{reservation.TrackingCode} ({reservation.CustomerName}) Ø¹Ù„Ù‰ Ù…Ù„Ø¹Ø¨ {reservation.Court?.Name}. Ø§Ù„Ø³Ø¨Ø¨: {request.Reason}",
+            Category = "Payment",
+            Timestamp = DateTimeOffset.UtcNow
+        });
 
         await db.SaveChangesAsync();
         return NoContent();
@@ -192,6 +204,17 @@ public sealed class AdminController(YallaMatchDbContext db, IWebHostEnvironment 
                 reservation.PaymentConfirmation.ReviewedAtUtc = DateTimeOffset.UtcNow;
             }
         }
+
+        var (actorEmail, actorRole) = GetActorInfo();
+        db.AuditLogs.Add(new AuditLog
+        {
+            AdminEmail = actorEmail,
+            AdminRole = actorRole,
+            Action = "Ø¥Ù„ØºØ§Ø¡ Ø­Ø¬Ø²",
+            Details = $"Ù‚Ø§Ù… Ø§Ù„Ù…Ø´Ø±Ù Ø¨Ø¥Ù„ØºØ§Ø¡ Ø§Ù„Ø­Ø¬Ø² #{reservation.TrackingCode} ({reservation.CustomerName}) Ø¹Ù„Ù‰ Ù…Ù„Ø¹Ø¨ {reservation.Court?.Name}. Ø§Ù„Ø³Ø¨Ø¨: {reservation.RejectionReason}",
+            Category = "Reservation",
+            Timestamp = DateTimeOffset.UtcNow
+        });
 
         await db.SaveChangesAsync();
         return Ok(ReservationDto.From(reservation));
@@ -241,6 +264,18 @@ public sealed class AdminController(YallaMatchDbContext db, IWebHostEnvironment 
         }
 
         db.RefundRecords.Add(refund);
+
+        var (actorEmail, actorRole) = GetActorInfo();
+        db.AuditLogs.Add(new AuditLog
+        {
+            AdminEmail = actorEmail,
+            AdminRole = actorRole,
+            Action = "Ø§Ø¹ØªÙ…Ø§Ø¯ Ø§Ø³ØªØ±Ø¯Ø§Ø¯ Ù…Ø§Ù„ÙŠ (Refund)",
+            Details = $"ØªÙ…Øª Ø§Ù„Ù…ÙˆØ§ÙÙ‚Ø© Ø¹Ù„Ù‰ Ø§Ø³ØªØ±Ø¯Ø§Ø¯ Ù…Ø¨Ù„Øº {refund.Amount} Ø¬.Ù… Ù„Ù„Ø­Ø¬Ø² #{reservation.TrackingCode} ({reservation.CustomerName}). Ø§Ù„Ø³Ø¨Ø¨: {refund.Reason}",
+            Category = "Payment",
+            Timestamp = DateTimeOffset.UtcNow
+        });
+
         await db.SaveChangesAsync();
         return Ok(RefundDto.From(refund));
     }
@@ -271,6 +306,17 @@ public sealed class AdminController(YallaMatchDbContext db, IWebHostEnvironment 
             reservation.PaymentConfirmation.RejectionReason = reservation.RejectionReason;
         }
 
+        var (actorEmail, actorRole) = GetActorInfo();
+        db.AuditLogs.Add(new AuditLog
+        {
+            AdminEmail = actorEmail,
+            AdminRole = actorRole,
+            Action = "Ø±ÙØ¶ Ø·Ù„Ø¨ Ø§Ø³ØªØ±Ø¯Ø§Ø¯ Ù…Ø§Ù„ÙŠ",
+            Details = $"ØªÙ… Ø±ÙØ¶ Ø·Ù„Ø¨ Ø§Ø³ØªØ±Ø¯Ø§Ø¯ Ø§Ù„Ø­Ø¬Ø² #{reservation.TrackingCode} ({reservation.CustomerName}). Ø§Ù„Ø³Ø¨Ø¨: {reservation.RejectionReason}",
+            Category = "Payment",
+            Timestamp = DateTimeOffset.UtcNow
+        });
+
         await db.SaveChangesAsync();
         return Ok(ReservationDto.From(reservation));
     }
@@ -297,6 +343,17 @@ public sealed class AdminController(YallaMatchDbContext db, IWebHostEnvironment 
 
         reservation.Status = ReservationStatus.CheckedIn;
         reservation.CheckedInAtUtc = DateTimeOffset.UtcNow;
+
+        var (actorEmail, actorRole) = GetActorInfo();
+        db.AuditLogs.Add(new AuditLog
+        {
+            AdminEmail = actorEmail,
+            AdminRole = actorRole,
+            Action = "ØªØ³Ø¬ÙŠÙ„ Ø­Ø¶ÙˆØ± Ø§Ù„Ù„Ø§Ø¹Ø¨ (Check-In)",
+            Details = $"ØªÙ… ØªØ£ÙƒÙŠØ¯ ÙˆØªØ³Ø¬ÙŠÙ„ Ø­Ø¶ÙˆØ± Ø§Ù„Ù„Ø§Ø¹Ø¨ {reservation.CustomerName} Ù„Ù„Ø­Ø¬Ø² #{reservation.TrackingCode} Ø¹Ù„Ù‰ Ù…Ù„Ø¹Ø¨ {reservation.Court?.Name}.",
+            Category = "Check-In",
+            Timestamp = DateTimeOffset.UtcNow
+        });
 
         await db.SaveChangesAsync();
         return Ok(ReservationDto.From(reservation));
