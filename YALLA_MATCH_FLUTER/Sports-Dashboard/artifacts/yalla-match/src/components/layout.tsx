@@ -92,19 +92,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               </Button>
             </Link>
 
-            {/* Granular RBAC Staff Role Switcher */}
-            <div className="flex items-center gap-2">
-              <select
-                value={role}
-                onChange={(e) => setRole(e.target.value as UserRole)}
-                className="h-8 px-2 text-xs font-semibold rounded-md border border-border bg-card text-foreground cursor-pointer shadow-xs focus:outline-none focus:ring-1 focus:ring-primary"
-                title="Switch Staff Role (Granular RBAC)"
-              >
-                <option value="SUPER_ADMIN">👑 Super Admin</option>
-                <option value="RECEPTIONIST">🎟️ Receptionist</option>
-                <option value="FINANCIAL_AUDITOR">📊 Financial Auditor</option>
-              </select>
-            </div>
+
 
             <div className="flex items-center gap-3 pl-2.5 border-l border-border/60">
               <div className="hidden md:flex flex-col items-end">

@@ -203,7 +203,7 @@ class _ReservationTrackingPageState extends State<ReservationTrackingPage> {
                     color: Colors.transparent,
                     child: InkWell(
                       borderRadius: BorderRadius.circular(14),
-                      onPressed: isLoading ? null : track,
+                      onTap: isLoading ? null : track,
                       child: Center(
                         child: isLoading
                             ? const CircularProgressIndicator(color: Colors.black, strokeWidth: 2.5)

@@ -210,7 +210,7 @@ class _FootballCourtPageState extends State<FootballCourtPage> {
                                       color: Colors.transparent,
                                       child: InkWell(
                                         borderRadius: BorderRadius.circular(14),
-                                        onPressed: () {
+                                        onTap: () {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(

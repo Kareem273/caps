@@ -358,7 +358,7 @@ class _BookingPageState extends State<BookingPage> {
                         color: Colors.transparent,
                         child: InkWell(
                           borderRadius: BorderRadius.circular(16),
-                          onPressed: isBooking ? null : book,
+                          onTap: isBooking ? null : book,
                           child: Center(
                             child: isBooking
                                 ? const CircularProgressIndicator(color: Colors.black)
